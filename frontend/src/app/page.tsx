@@ -1,25 +1,24 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { backendStatus } from "@/services/api";
-import { useEffect, useState } from "react";
-
+import Navbar from "@/components/layout/Navbar";
+import Sidebar from "@/components/layout/Sidebar";
 
 export default function Home() {
-  const[message,setMessage]=useState("Loading....")
-
-    function click(){
-    backendStatus()
-    .then((data)=>setMessage(data.message))
-    .catch(()=>setMessage("Backend connection failed"))
-    }
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">
-        AI PDF Chat Application
-      </h1>
-      <Button onClick={click}>Click here</Button>
-      <p>Backend Status: {message}</p>
-    </main>
+    <div className="h-screen flex flex-col">
+      <Navbar />
+
+      <div className="flex flex-1">
+        <Sidebar />
+
+        <main className="flex-1 p-6">
+          <h2 className="text-2xl font-bold">
+            Welcome to AI PDF Chat
+          </h2>
+
+          <p className="mt-2 text-muted-foreground">
+            Upload a PDF to start chatting.
+          </p>
+        </main>
+      </div>
+    </div>
   );
 }
