@@ -1,5 +1,8 @@
+
+
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
+import PdfUpload from "@/components/pdf/PdfUpload";
 
 export default function Home() {
   return (
@@ -14,9 +17,11 @@ export default function Home() {
             Welcome to AI PDF Chat
           </h2>
 
-          <p className="mt-2 text-muted-foreground">
-            Upload a PDF to start chatting.
-          </p>
+           <p className="mt-2 text-muted-foreground">
+    Upload a PDF to start chatting.
+  </p>
+
+  <PdfUpload />
         </main>
       </div>
     </div>
