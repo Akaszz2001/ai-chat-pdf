@@ -19,7 +19,7 @@ const handleUpload=async()=>{
   try {
     setUploading(true)
     const result= await uploadPdf(file)
-    setStatus(`Uploaded: ${result.filename}`);
+    setStatus(`Uploaded: ${result.original_filename}`);
   } catch (error) {
      setStatus("Upload failed");
     console.error(error);
