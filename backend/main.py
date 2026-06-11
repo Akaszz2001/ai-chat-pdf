@@ -4,6 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.utils.file_utils import generate_unique_filename
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.chunk_service import chunkSplitter
+from app.services.vector_service import store_chunks
+from app.schemas.chat import (ChatRequest,ChatResponse)
+
+from app.services.rag_service import ask_pdf
 app=FastAPI()
 
 UPLOAD_DIR=Path("uploads")
@@ -37,12 +41,21 @@ async def upload_pdf(file:UploadFile=File(...)):
     
     chunks=chunkSplitter(text)
     
-    for i, chunk in enumerate(chunks):
-        print(f"\n===== CHUNK {i+1} =====")
-        print(chunk)
-    
+    store_chunks(chunks=chunks,pdf_id=unique_filename)
+        
+
     return {
     "original_filename": file.filename,
     "stored_filename": unique_filename,
     "status": "uploaded"
 }
+
+
+@app.post('/chat',response_model=ChatResponse)
+async def chat(request:ChatRequest):
+    answer=ask_pdf(
+        request.question,
+        request.pdf_id
+    )
+    
+    return ChatResponse(answer=answer)
