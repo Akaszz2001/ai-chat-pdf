@@ -1,5 +1,6 @@
 
 
+import UserProfile from "@/components/auth/UserProfile";
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
 import PdfUpload from "@/components/pdf/PdfUpload";
@@ -22,6 +23,7 @@ export default function Home() {
   </p>
 
   <PdfUpload />
+  <UserProfile/>
         </main>
       </div>
     </div>
