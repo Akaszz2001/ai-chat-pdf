@@ -4,32 +4,33 @@ import { useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { uploadPdf } from "@/services/pdf.service";
+import ChatBox from "../chat/ChatBox";
 
 export default function PdfUpload() {
   const [file, setFile] = useState<File | null>(null);
+  const [pdfId, setPdfId] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
- const [uploading,setUploading]=useState(false)
- const [status,setStatus]=useState("")
+  const [uploading, setUploading] = useState(false);
+  const [status, setStatus] = useState("");
   const handleSelectFile = () => {
     fileInputRef.current?.click();
   };
-const handleUpload=async()=>{
-  if(!file) return 
-  try {
-    setUploading(true)
-    const result= await uploadPdf(file)
-    setStatus(`Uploaded: ${result.original_filename}`);
-  } catch (error) {
-     setStatus("Upload failed");
-    console.error(error);
-  }finally{
-    setUploading(false)
-  }
-}
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleUpload = async () => {
+    if (!file) return;
+    try {
+      setUploading(true);
+      const result = await uploadPdf(file);
+      setStatus(`Uploaded: ${result.original_filename}`);
+      setPdfId(result.stored_filename)
+    } catch (error) {
+      setStatus("Upload failed");
+      console.error(error);
+    } finally {
+      setUploading(false);
+    }
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
 
     if (selectedFile) {
@@ -38,15 +39,12 @@ const handleUpload=async()=>{
   };
 
   return (
+    <>
     <Card className="mt-6 max-w-xl">
       <CardContent className="flex flex-col items-center gap-4 p-10">
-        <h2 className="text-xl font-semibold">
-          Upload PDF
-        </h2>
+        <h2 className="text-xl font-semibold">Upload PDF</h2>
 
-        <Button onClick={handleSelectFile}>
-          Select PDF
-        </Button>
+        <Button onClick={handleSelectFile}>Select PDF</Button>
 
         <input
           ref={fileInputRef}
@@ -56,25 +54,19 @@ const handleUpload=async()=>{
           onChange={handleFileChange}
         />
 
-        {file && (
-          <p className="text-sm">
-            Selected: {file.name}
-          </p>
-        )}
+        {file && <p className="text-sm">Selected: {file.name}</p>}
 
-        <Button
-  onClick={handleUpload}
-  disabled={!file || uploading}
->
-  {uploading ? "Uploading..." : "Upload"}
-</Button>
+        <Button onClick={handleUpload} disabled={!file || uploading}>
+          {uploading ? "Uploading..." : "Upload"}
+        </Button>
 
-{status && (
-  <p className="text-sm">
-    {status}
-  </p>
-)}
+        {status && <p className="text-sm">{status}</p>}
       </CardContent>
     </Card>
+
+    {pdfId &&(
+        <ChatBox pdfId={pdfId} />     )
+    }
+    </>
   );
 }
